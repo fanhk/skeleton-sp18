@@ -5,68 +5,101 @@ public class Planet {
     public double yyVel;
     public double mass;
     public String imgFileName;
-    public final static double G = 6.67e-11;
-
+    static final double G = 6.67e-11;
+//     public Planet(double xxPos, double yyPos, double xxVel, double yyVel, double mass, String imgFileName) {
+//         this.xxPos = xxPos;
+//         this.yyPos = yyPos;
+//         this.xxVel = xxVel;
+//         this.yyVel = yyVel;
+//         this.mass = mass;
+//         this.imgFileName = imgFileName;
+//     }
     public Planet(double xP, double yP, double xV, double yV, double m, String img) {
-	this.xxPos = xP;
-	this.yyPos = yP;
-	this.xxVel = xV;
-	this.yyVel = yV;
-	this.mass = m;
-	this.imgFileName = img;
+        xxPos = xP;
+        yyPos = yP;
+        xxVel = xV;
+        yyVel = yV;
+        mass = m;
+        imgFileName = img;
     }
-
+//     public Planet(Planet p) {
+//         this.xxPos = p.xxPos;
+//         this.yyPos = p.yyPos;
+//         this.xxVel = p.xxVel;
+//         this.yyVel = p.yyVel;
+//         this.mass = p.mass;
+//         this.imgFileName = p.imgFileName;
+//     }
     public Planet(Planet p) {
-	this.xxPos = p.xxPos;
-	this.yyPos = p.yyPos;
-	this.xxVel = p.xxVel;
-	this.yyVel = p.yyVel;
-	this.mass = p.mass;
-	this.imgFileName = p.imgFileName;
+        xxPos = p.xxPos;
+        yyPos = p.yyPos;
+        xxVel = p.xxVel;
+        yyVel = p.yyVel;
+        mass = p.mass;
+        imgFileName = p.imgFileName;
     }
 
     public double calcDistance(Planet p) {
-	double dx = (this.xxPos - p.xxPos) * (this.xxPos - p.xxPos);
-	double dy = (this.yyPos - p.yyPos) * (this.yyPos - p.yyPos);
-	return Math.sqrt(dx + dy);
+        double dx = xxPos - p.xxPos;
+        double dy = yyPos - p.yyPos;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public double calcForceExertedBy(Planet p) {
-	double r = this.calcDistance(p);
-	return (Planet.G * this.mass * p.mass) / (r * r); 
+        double distance = calcDistance(p);
+        return (G * mass * p.mass) / (distance * distance);
     }
 
     public double calcForceExertedByX(Planet p) {
-	double dx = this.xxPos - p.xxPos;
-	dx = dx > 0 ? dx : -dx;
-	return this.calcForceExertedBy(p) * dx / this.calcDistance(p);
-    }
-    
-    public double calcForceExertedByY(Planet p) {
-	double dy = this.yyPos - p.yyPos;
-	dy = dy > 0 ? dy : -dy;
-	return this.calcForceExertedBy(p) * dy / this.calcDistance(p);
-    }
-    
-    public double calcNetForceExertedByX(Planet[] pArr) {
-	double netForceX = 0.0;
-	for (Planet p : pArr) {
-	    if (p.equals(this)) {
-		continue;
-	    }
-	    netForceX += this.calcForceExertedByX(p);
-	}
-	return netForceX;
+        double dx = p.xxPos - xxPos;
+        double r = calcDistance(p);
+        double F = calcForceExertedBy(p);
+
+        return (F * dx) / r;
     }
 
-    public double calcNetForceExertedByY(Planet[] pArr) {
-	double netForceY = 0.0;
-	for (Planet p : pArr) {
-	    if (p.equals(this)) {
-		continue;
-	    }
-	    netForceY += this.calcForceExertedByY(p);
-	}
-	return netForceY;
+    public double calcForceExertedByY(Planet p) {
+        double dy = p.yyPos - yyPos;
+        double r = calcDistance(p);
+        double F = calcForceExertedBy(p);
+
+        return (F * dy) / r;
+    }
+
+    public double calcNetForceExertedByX(Planet[] planets) {
+        double F = 0.0;
+        for (Planet p : planets) {
+            if (this.equals(p)) {
+                continue;
+            }
+            F += calcForceExertedByX(p);
+        }
+        return F;
+    }
+
+    public double calcNetForceExertedByY(Planet[] planets) {
+        double F = 0.0;
+        for (Planet p : planets) {
+            if (this.equals(p)) {
+                continue;
+            }
+            F += calcForceExertedByY(p);
+        }
+        return F;
+    }
+
+    public void update(double dt, double fX, double fY) {
+        double aX = fX / mass;
+        double aY = fY / mass;
+
+        xxVel += dt * aX;
+        yyVel += dt * aY;
+
+        xxPos += dt * xxVel;
+        yyPos += dt * yyVel;
+    }
+
+    public void draw() {
+        StdDraw.picture(xxPos, yyPos, "images/" + imgFileName);
     }
 }
