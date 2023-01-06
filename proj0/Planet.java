@@ -5,15 +5,8 @@ public class Planet {
     public double yyVel;
     public double mass;
     public String imgFileName;
-    static final double G = 6.67e-11;
-//     public Planet(double xxPos, double yyPos, double xxVel, double yyVel, double mass, String imgFileName) {
-//         this.xxPos = xxPos;
-//         this.yyPos = yyPos;
-//         this.xxVel = xxVel;
-//         this.yyVel = yyVel;
-//         this.mass = mass;
-//         this.imgFileName = imgFileName;
-//     }
+    private static final double G = 6.67e-11;
+
     public Planet(double xP, double yP, double xV, double yV, double m, String img) {
         xxPos = xP;
         yyPos = yP;
@@ -22,14 +15,7 @@ public class Planet {
         mass = m;
         imgFileName = img;
     }
-//     public Planet(Planet p) {
-//         this.xxPos = p.xxPos;
-//         this.yyPos = p.yyPos;
-//         this.xxVel = p.xxVel;
-//         this.yyVel = p.yyVel;
-//         this.mass = p.mass;
-//         this.imgFileName = p.imgFileName;
-//     }
+
     public Planet(Planet p) {
         xxPos = p.xxPos;
         yyPos = p.yyPos;
