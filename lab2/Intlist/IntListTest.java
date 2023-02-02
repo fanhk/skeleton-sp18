@@ -1,4 +1,5 @@
 import static org.junit.Assert.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 import org.junit.Test;
 
